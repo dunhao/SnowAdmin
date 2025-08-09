@@ -19,13 +19,16 @@ export default defineConfig(({ mode }) => {
       // host: "0.0.0.0",
       open: false,
       // 为开发服务器配置自定义代理规则-用于开发时的代理
-      proxy: {
-        "/api": {
-          target: env.VITE_APP_BASE_URL,
-          changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, "")
+      // 当开启mock时，不使用代理
+      ...(env.VITE_APP_OPEN_MOCK !== 'true' && {
+        proxy: {
+          "/api": {
+            target: env.VITE_APP_BASE_URL,
+            changeOrigin: true,
+            rewrite: path => path.replace(/^\/api/, "")
+          }
         }
-      }
+      })
     },
     // 插件：路径build/vite-plugin
     plugins: createVitePlugins(env),
